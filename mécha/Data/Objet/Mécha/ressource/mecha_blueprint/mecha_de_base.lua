@@ -1,0 +1,9 @@
+M.tete = "tete_base"
+M.tronc = "tronc_base"
+M.generateur = "fuel_base"
+M.bras_G = "bras_base"
+M.bras_D = "bras_base"
+M.arme_G = "mitraillette"
+M.arme_D = "mitraillette"
+M.arme_epaule = 0
+M.jambe = "base"

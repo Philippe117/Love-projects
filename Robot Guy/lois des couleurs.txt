@@ -1,0 +1,21 @@
+
+pour le bleu
+
+	0-99 	= arriere plans
+
+	100-149 	= echelle
+
+	150-255 = sol
+
+
+pour le rouge
+
+	écrivé le nom du mobs dans le fichier "mobs en rouge.lua"
+
+pour le vert
+
+	sert seulement pour les plateforme
+
+	pour dessiner leur trajet
+
+	utiliser le meme taux de vert que seluit de rouge de la plateforme

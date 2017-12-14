@@ -1,0 +1,11 @@
+E.delais = 6
+E.number = 20
+E.alphaplus = -5
+E.alpha = 180
+E.rot = 0
+E.Splus = 0
+E.T = 1
+E.S = .5
+E.random = .3
+E.frix = .85
+E.facteur_vitt = 0

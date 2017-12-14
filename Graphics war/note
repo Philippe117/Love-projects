@@ -1,0 +1,32 @@
+
+
+sortes de mana
+
+	rouge	feu
+	bleu	eau
+	noir	mort
+	blanc	air
+	vert	vie, nature
+	brun	terre
+
+
+
+difent tipe d'ataque et d'armure, leur bruit
+
+
+
+	ataque \ armure	|	chair		metal		boi		liquide		air		magique
+	________________|__________________________________________________________________________________________________________
+	coupant		|	trenche		resiste		toc		coupe		
+			|
+	contondant	|	atendris	ponck		crack		ploush		fwoof		
+			|
+	brulant		|	brule		fondre		brule		evapore				
+			|
+	gelant		|	gele		coince		resiste		faiblaisse			
+			|
+	magique		|											clash
+			|
+			|
+
+

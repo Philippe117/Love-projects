@@ -1,0 +1,15 @@
+rouge
+255 = sol
+200 = haut fon
+180 = eau
+100 = rebord
+50  = crevasse
+
+bleu
+200 = monstre terrestre
+100 = monstre marin
+255 = start
+
+vert
+255 = rune
+200 = carte
