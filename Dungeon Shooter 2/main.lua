@@ -39,7 +39,7 @@ function love.load()
 	drawlist[5] = {{},{},{},{},{}}
 	drawlist[6] = {{},{},{},{},{}}
 	--drawlist[x] = { 1 unit ,2 projectile ,3 effets ,4 effetl}
-ligth = love.graphics.newFramebuffer( )
+ligth = love.graphics.newCanvas( )
 	DSW = math.atan2(0,1)
 	hau = "w"
 	bas = "s"
@@ -910,17 +910,18 @@ function love.draw()
 				love.graphics.setColor(255,255,255,math.min(255,50*(missi[h][4]-crono)))
 				love.graphics.draw( missilist[missi[h][5]][6] , (missi[h][1][1]-cam_x)*zoom*cam_z/(cam_z-missi[h][1][5]*zoom)+love.graphics.getWidth()/2 , (missi[h][1][2]-cam_y)*zoom*cam_z/(cam_z-missi[h][1][5]*zoom)+love.graphics.getHeight()/2 ,missi[h][2][3],zoom*cam_z/(cam_z-missi[h][1][5]*zoom)/2*math.cos(missi[h][2][4]),zoom*cam_z/(cam_z-missi[h][1][5]*zoom)/2,missilist[missi[h][5]][6]:getWidth()/2,missilist[missi[h][5]][6]:getHeight()/2)
 			end
-		end
-		love.graphics.setRenderTarget(ligth)	
+        end
+		love.graphics.setCanvas(ligth)
 		love.graphics.setColor(255,255,255)
 		for i,h in ipairs(j[1]) do
 			love.graphics.setColor(255,255,255)
 			love.graphics.draw( ombhaut , (unit[h][1][3]-cam_x+(unit[h][1][5]-unit[h][18])/2)*zoom*cam_z/(cam_z-unit[h][1][5]*zoom)+love.graphics.getWidth()/2 , (unit[h][1][4]-cam_y+(unit[h][1][5]-unit[h][18])/2)*zoom*cam_z/(cam_z-unit[h][1][5]*zoom)+love.graphics.getHeight()/2 ,.75,zoom*cam_z/(cam_z-unit[h][18]*zoom),zoom*cam_z/(cam_z-unit[h][18]*zoom),54,60)
 		end
-		love.graphics.setRenderTarget()	
+		love.graphics.setCanvas()
 		love.graphics.setBlendMode( "subtractive" )
 		love.graphics.setColor(255,255,255)
 		love.graphics.draw( ligth , 0 , 0 )
+        ligth:clear()
 		love.graphics.setBlendMode( "alpha" )
 		for i,h in ipairs(j[1]) do
 			local difx = 7*math.cos(unit[h][10][6]+.5*math.pi)
@@ -971,7 +972,7 @@ function love.draw()
 	end
 	if noirceur > 1 then
 		love.graphics.setColor(255,255,255,noirceur)
-		love.graphics.setRenderTarget(ligth)
+		love.graphics.setCanvas(ligth)
 		love.graphics.rectangle( "fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight() )
 		love.graphics.setBlendMode( "subtractive" )
 		for i,h in ipairs(unit) do
@@ -984,10 +985,11 @@ function love.draw()
 		for i,h in ipairs(effetl) do
 			love.graphics.draw( effetlistl[h[10]][9] , (h[1]-cam_x)*zoom*cam_z/(cam_z-h[3]*zoom)+love.graphics.getWidth()/2 , (h[2]-cam_y)*zoom*cam_z/(cam_z-h[3]*zoom)+love.graphics.getHeight()/2 ,h[8],h[7]*zoom*cam_z/(cam_z-h[3]*zoom)/2,h[7]*zoom*cam_z/(cam_z-h[3]*zoom)/2,effetlistl[h[10]][9]:getWidth()/2,effetlistl[h[10]][9]:getHeight()/2)
 		end
-		love.graphics.setRenderTarget()	
+		love.graphics.setCanvas()
 		love.graphics.setBlendMode( "subtractive" )
 		love.graphics.setColor(255,255,255)
 		love.graphics.draw( ligth , 0 , 0 )
+        ligth:clear()
 		love.graphics.setBlendMode( "alpha" )
 	end
 	love.graphics.setColor(255,255,255)

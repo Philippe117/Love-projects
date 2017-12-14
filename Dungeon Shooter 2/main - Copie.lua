@@ -42,7 +42,7 @@ function love.load()
 	drawlist[5] = {{},{},{},{},{}}
 	drawlist[6] = {{},{},{},{},{}}
 	--drawlist[x] = { 1 unit ,2 projectile ,3 effets ,4 effetl}
-ligth = love.graphics.newFramebuffer( )
+ligth = love.graphics.newCanvas( )
 	DSW = math.atan2(0,1)
 	hau = "w"
 	bas = "s"
@@ -937,18 +937,18 @@ function love.draw()
 		end
 
 
-
-		love.graphics.setRenderTarget(ligth)	
+		love.graphics.setCanvas(ligth)
 
 		love.graphics.setColor(255,255,255)
 		for i,h in ipairs(j[1]) do
 			love.graphics.setColor(255,255,255)
 			love.graphics.draw( ombhaut , (unit[h][1][3]-cam_x+(unit[h][1][5]-unit[h][18])/2)*zoom*1000/(1000-unit[h][1][5]*zoom)+love.graphics.getWidth()/2 , (unit[h][1][4]-cam_y+(unit[h][1][5]-unit[h][18])/2)*zoom*1000/(1000-unit[h][1][5]*zoom)+love.graphics.getHeight()/2 ,.75,zoom*1000/(1000-unit[h][18]*zoom),zoom*1000/(1000-unit[h][18]*zoom),54,60)
 		end
-		love.graphics.setRenderTarget()	
+		love.graphics.setCanvas()
 		love.graphics.setBlendMode( "subtractive" )
 		love.graphics.setColor(255,255,255)
 		love.graphics.draw( ligth , 0 , 0 )
+        ligth:clear()
 		love.graphics.setBlendMode( "alpha" )
 
 		for i,h in ipairs(j[1]) do
@@ -1031,7 +1031,7 @@ function love.draw()
 	end
 	if noirceur > 1 then
 		love.graphics.setColor(255,255,255,noirceur)
-		love.graphics.setRenderTarget(ligth)
+		love.graphics.setCanvas(ligth)
 		love.graphics.rectangle( "fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight() )
 		love.graphics.setBlendMode( "subtractive" )
 		for i,h in ipairs(unit) do
@@ -1046,10 +1046,11 @@ function love.draw()
 			love.graphics.draw( effetlistl[h[10]][9] , (h[1]-cam_x)*zoom*1000/(1000-h[3]*zoom)+love.graphics.getWidth()/2 , (h[2]-cam_y-3)*zoom*1000/(1000-h[3]*zoom)+love.graphics.getHeight()/2 ,h[8],h[7]*zoom*1000/(1000-h[3]*zoom)/2,h[7]*zoom*1000/(1000-h[3]*zoom)/2,effetlistl[h[10]][9]:getWidth()/2,effetlistl[h[10]][9]:getHeight()/2)
 		end
 
-		love.graphics.setRenderTarget()	
+		love.graphics.setCanvas()
 		love.graphics.setBlendMode( "subtractive" )
 		love.graphics.setColor(255,255,255)
 		love.graphics.draw( ligth , 0 , 0 )
+        ligth:clear()
 		love.graphics.setBlendMode( "alpha" )
 
 	end
