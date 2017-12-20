@@ -5,7 +5,7 @@ function love.load()
 	lum = love.graphics.newImage("lum.png")
 
 	menulist = {}
-	local list = love.filesystem.enumerate("Menu")
+	local list = love.filesystem.getDirectoryItems("Menu")
 	for i,h in ipairs(list) do
 		table.insert( menulist , {nom = h} )
 	end
@@ -17,7 +17,7 @@ function love.load()
 		end
 	end
 	txt = "non"
-	love.graphics.toggleFullscreen( )
+	love.window.setFullscreen( true )
 	love.mouse.setVisible( false )
 
 	bouton = {}
@@ -32,13 +32,13 @@ function love.load()
 	love.graphics.setFont( chifre )
 	niv = "niveau 1"
 		--{ x ,y , m , n , A , tipe , maitre , mode , }
-	local list = love.filesystem.enumerate("Data/Missi")                       -- missilist
+	local list = love.filesystem.getDirectoryItems("Data/Missi")                       -- missilist
 	for i,h in ipairs(list) do
 		_G["missi_"..h..""] = {nom = h}
 		T = _G["missi_"..h..""]
 		love.filesystem.load("Data/Missi/"..h.."/scripte.lua")()
 		_G["missi_"..h..""].init(_G["missi_"..h..""])
-		local list = love.filesystem.enumerate("Data/Missi/"..h.."/model")
+		local list = love.filesystem.getDirectoryItems("Data/Missi/"..h.."/model")
 		for e,g in ipairs(list) do
 			_G["missi_"..h.."_anim_"..g..""] = {}
 			num = 1
@@ -54,11 +54,11 @@ function love.load()
 		end
 	end
 	T = nil
-	local list = love.filesystem.enumerate("Data/Effet")                       -- effet
+	local list = love.filesystem.getDirectoryItems("Data/Effet")                       -- effet
 	for i,h in ipairs(list) do
 		_G["effet_"..h..""] = {nom = h}
 		E = _G["effet_"..h..""]
-		love.filesystem.load("Data/Effet/"..h.."/proprieter.lua")()
+		love.filesystem.load("Data/Effet/"..h.."/Proprieter.lua")()
 		num = 1
 		_G["effet_"..h..""].sprite = {}
 		while love.filesystem.exists( "Data/Effet/"..h.."/"..num..".png" ) == true do
@@ -72,13 +72,13 @@ function love.load()
 		S = _G["effet_"..h..""]
 	end
 		--{ x , y , m , n , A , tipe , equipe , mode , }
-	local list = love.filesystem.enumerate("Data/Unit")                      --unitlist
+	local list = love.filesystem.getDirectoryItems("Data/Unit")                      --unitlist
 	for i,h in ipairs(list) do
 		_G["unit_"..h..""] = {	nom = h}
 		T = _G["unit_"..h..""]
 		love.filesystem.load("Data/Unit/"..h.."/scripte.lua")()
 		_G["unit_"..h..""].init(_G["unit_"..h..""])
-		local list = love.filesystem.enumerate("Data/Unit/"..h.."/model")
+		local list = love.filesystem.getDirectoryItems("Data/Unit/"..h.."/model")
 		for e,g in ipairs(list) do
 			_G["unit_"..h.."_anim_"..g..""] = {}
 			num = 1
@@ -97,13 +97,13 @@ function love.load()
 	T = nil
 	objet = {}
 		--{ x , y , m , n , A ,	 }
-	local list = love.filesystem.enumerate("Data/Objet")                       --objlist
+	local list = love.filesystem.getDirectoryItems("Data/Objet")                       --objlist
 	for i,h in ipairs(list) do
 		_G["objet_"..h..""] = {nom = h}
 		T = _G["objet_"..h..""]
 		love.filesystem.load("Data/Objet/"..h.."/scripte.lua")()
 		_G["objet_"..h..""].init(_G["objet_"..h..""])
-		local list = love.filesystem.enumerate("Data/Objet/"..h.."/model")
+		local list = love.filesystem.getDirectoryItems("Data/Objet/"..h.."/model")
 		for e,g in ipairs(list) do
 			_G["objet_"..h.."_anim_"..g..""] = {}
 			num = 1
@@ -129,7 +129,7 @@ function set_menu(newy)
 	if love.filesystem.exists( "Menu/"..newy.nom.."/fon.png") == true then
 		fond = love.graphics.newImage("Menu/"..newy.nom.."/fon.png")
 	end
-	local list = love.filesystem.enumerate("Menu/"..newy.nom.."/bouton")
+	local list = love.filesystem.getDirectoryItems("Menu/"..newy.nom.."/bouton")
 	for new,h in ipairs(list) do
 		table.insert( bouton , {nom = h,normal = {},pointer = {},cliquer = {},eta = 0,frame = 1} )
 	end

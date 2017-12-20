@@ -32,7 +32,7 @@ function I.load(I)
 
 
 	--load carte
-	local list = love.filesystem.enumerate("Data/Carte/"..niv.."/Texture")                --texture
+	local list = love.filesystem.getDirectoryItems("Data/Carte/"..niv.."/Texture")                --texture
 	for i,h in ipairs(list) do
 		_G["texture_"..h..""] = {}
 		num = 1
@@ -441,7 +441,8 @@ function I.update(I,dot)
 			and math.abs(g.y-cam_y) < love.graphics.getHeight()/2/zoom then
 				table.insert(drawlist[math.min(29,math.floor(g.z/10))+1].mob,g)
 			end
-			if math.floor(g.frame) ~= g.lastframe then
+			if math.floor(g.frame) ~= g.lastframe
+				and not g.sprite == nil then
 				if g.sprite[math.floor(g.frame)].son ~= nil
 				and g.sprite[math.floor(g.frame)].temposon < crono then
 					table.insert(soundlist,{love.audio.newSource(g.sprite[math.floor(g.frame)].son),crono+5})
@@ -649,7 +650,7 @@ function I.draw(I)
 				end
 				love.graphics.draw( g.tex[1].image , (g.x-cam_x+.5)*50*zoom*cam_z/(cam_z-g.z*zoom)+love.graphics.getWidth()/2 , (g.y-cam_y+.5)*50*zoom*cam_z/(cam_z-g.z*zoom)+love.graphics.getHeight()/2 ,0,zoom*cam_z/(cam_z-g.z*zoom)/2,zoom*cam_z/(cam_z-g.z*zoom)/2,g.tex[1].image:getWidth()/2,g.tex[1].image:getHeight()/2)
 				if g.lum > 0 then
-					love.graphics.setBlendMode( "additive" )
+					love.graphics.setBlendMode( "alpha" )
 					love.graphics.setColor(255,255,255,10*g.lum)
 					love.graphics.draw( lum , (g.x-cam_x+.5)*50*zoom*cam_z/(cam_z-g.z*zoom)+love.graphics.getWidth()/2 , (g.y-cam_y+.5)*50*zoom*cam_z/(cam_z-g.z*zoom)+love.graphics.getHeight()/2 ,0,zoom*cam_z/(cam_z-g.z*zoom)/2,zoom*cam_z/(cam_z-g.z*zoom)/2,57.5,57.5)
 					love.graphics.setBlendMode( "alpha" )
@@ -660,8 +661,8 @@ function I.draw(I)
 		for e,g in ipairs(h.mob) do
 
 			if math.abs(g.x-cam_x+.5)*50*zoom*cam_z/(cam_z-g.z*zoom) < love.graphics.getWidth()/2+100*cam_z/(cam_z-g.z*zoom)*zoom
-			and math.abs(g.y-cam_y+.5)*50*zoom*cam_z/(cam_z-g.z*zoom) < love.graphics.getHeight()/2+100*cam_z/(cam_z-g.z*zoom)*zoom then
-
+			and math.abs(g.y-cam_y+.5)*50*zoom*cam_z/(cam_z-g.z*zoom) < love.graphics.getHeight()/2+100*cam_z/(cam_z-g.z*zoom)*zoom
+			and not g.sprite == nil then
 
 				--love.graphics.setColor(2*g.z,2*g.z,2*g.z)
 				love.graphics.setColor(255*(600+g.z)/850,255*(600+g.z)/850,255*(600+g.z)/850)

@@ -28,7 +28,7 @@ function I.load(I)
 
 
 	--load carte
-	local list = love.filesystem.enumerate("Data/Carte/"..niv.."/Texture")                --texture
+	local list = love.filesystem.getDirectoryItems("Data/Carte/"..niv.."/Texture")                --texture
 	for i,h in ipairs(list) do
 		_G["texture_"..h..""] = {}
 		num = 1

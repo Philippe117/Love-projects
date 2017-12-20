@@ -351,14 +351,16 @@ function T.update(T,Q,I,dot)
 		if math.abs(angle(math.atan2(Q.n,Q.m),Q.app[2].A)) < math.pi/2.22 then
 			Q.app[1].A = Q.app[1].A+.18*angle(Q.app[1].A,math.atan2(Q.n,Q.m))
 			Q.app[1].frame = Q.app[1].frame+math.sqrt((Q.m+Q.dep_m)^2/2+(Q.n+Q.dep_n)^2/2)*dot*5
-			if Q.app[1].frame >= table.maxn(Q.app[1].sprite)+1 then
+			if not Q.app[1].sprite == nil
+			and Q.app[1].frame >= table.maxn(Q.app[1].sprite)+1 then
 				Q.app[1].frame = 1
 				Q.app[1].lastframe = 0
 			end
 		else
 			Q.app[1].A = Q.app[1].A+.18*angle(Q.app[1].A,math.atan2(Q.n,Q.m)-math.pi)
 			Q.app[1].frame = Q.app[1].frame-math.sqrt((Q.m+Q.dep_m)^2/2+(Q.n+Q.dep_n)^2/2)*dot*5
-			if Q.app[1].frame < 1 then
+			if not Q.app[1].sprite == nil
+			and Q.app[1].frame < 1 then
 				Q.app[1].frame = table.maxn(Q.app[1].sprite)+.99999
 				Q.app[1].lastframe = table.maxn(Q.app[1].sprite)+1
 			end
@@ -375,7 +377,8 @@ function T.update(T,Q,I,dot)
 
 		if Q.app[2].sprite == _G["unit_"..Q.tipe.nom.."_anim_stand"] then
 			Q.app[2].frame = Q.app[2].frame+.15
-			if Q.app[2].frame >= table.maxn(Q.app[2].sprite)+1 then
+			if not Q.app[2].sprite == nil
+			and Q.app[2].frame >= table.maxn(Q.app[2].sprite)+1 then
 				Q.app[2].frame = 1
 				Q.app[2].lastframe = 0
 			end
