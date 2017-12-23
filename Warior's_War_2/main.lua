@@ -7,7 +7,7 @@
 --
 
 function love.load()
-    love.filesystem.load("plugins/pluginManager.lua")()
+    love.filesystem.load("pluginManager/pluginManager.lua")()
     pluginManager.load()
 end
 function love.mousepressed( mouseX, mouseY, button )

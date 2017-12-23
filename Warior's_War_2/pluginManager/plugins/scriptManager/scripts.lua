@@ -6,3 +6,7 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+function plugin.draw()
+
+    love.graphics.print( "test" , 30 , 30 )
+end
