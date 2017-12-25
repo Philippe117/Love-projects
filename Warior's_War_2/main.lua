@@ -6,8 +6,12 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+debugTocken = 0
+print("starting program")
+
 function love.load()
-    love.filesystem.load("pluginManager/pluginManager.lua")()
+    print("loading...")
+    love.filesystem.load("pluginManager.lua")()
     pluginManager.load()
 end
 function love.mousepressed( mouseX, mouseY, button )
@@ -27,4 +31,6 @@ function love.update(dt)
 end
 function love.draw()
     pluginManager.draw()
+
+    love.graphics.print("debugTocken="..debugTocken.."", 0, 0)
 end
