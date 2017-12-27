@@ -11,7 +11,7 @@ local path = "plugins/screens/"
 map = {}
 
 function plugin.load()
-    map = mapManager.loadMap("logo")
+    map = mapManager.loadMap("Le desert de Mirou")
     camera.addElement(map)
 end
 

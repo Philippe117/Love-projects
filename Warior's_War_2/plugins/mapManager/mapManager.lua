@@ -6,17 +6,15 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+local refreshTime = 0.1
+local path = "assets/maps/"
 mapManager = {}
 mapManager.maps = {}
-mapManager.maps.__mode = 'v'
-
-
-local path = "assets/maps/"
+setmetatable(mapManager.maps, { __mode = 'vk' })
 
 function plugin.update()
     for i, map in pairs(mapManager.maps) do
-        if map ~= 'v'
-        and not map.status.UTD
+        if  not map.status.UTD
         and map.status.time < time.time then
             map.image = love.graphics.newImage(map.imageData)
             map.status.UTD = true
@@ -26,7 +24,7 @@ end
 
 function mapManager.loadMap(mapFileName)
     local map = {}
-    map.imageData = love.image.newImageData(""..path..""..mapFileName.."/"..mapFileName..".png")
+    map.imageData = love.image.newImageData(""..path..""..mapFileName.."/image.png")
     map.image = love.graphics.newImage(map.imageData)
     map.image:setFilter("nearest","nearest")
     map.draw = mapManager.draw
@@ -38,7 +36,7 @@ function mapManager.loadMap(mapFileName)
 end
 
 function mapManager.removeMaterial(map, x, y, radius, delay)
-    if not delay then delay = 1 end
+    if not delay then delay = refreshTime end
     x = math.floor(x+0.5)
     y = math.floor(y+0.5)
     if map.status.UTD then

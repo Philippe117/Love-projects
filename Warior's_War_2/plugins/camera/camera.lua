@@ -18,7 +18,7 @@ camera.velocity = {x=0, y=0, z=0, zoom=0}
 camera.acceleration = {x=0, y=0, z=0, zoom=0}
 
 camera.elements = {}
-camera.elements.__mode = 'v'
+setmetatable(camera.elements, { __mode = 'vk' })
 
 function plugin.update(dt)
     camera.position.x = camera.position.x+camera.velocity.x
