@@ -18,7 +18,7 @@ function plugin.load()
 end
 
 function myLogo.draw(x,y,r,s)
-    love.graphics.draw( screens.logo ,x,y)
+    love.graphics.draw( screens.logo ,x ,y , r, s, s)
 end
 
 function plugin.draw()

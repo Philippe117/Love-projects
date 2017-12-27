@@ -26,6 +26,9 @@ end
 function love.keyreleased( key )
     pluginManager.keyreleased( key )
 end
+function love.wheelmoved( x, y )
+    pluginManager.wheelmoved(x, y)
+end
 function love.update(dt)
     pluginManager.update(dt)
 end

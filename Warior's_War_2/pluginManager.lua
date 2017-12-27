@@ -16,6 +16,7 @@ pluginManager.mousepressedList = {}
 pluginManager.mousereleasedList = {}
 pluginManager.keypressedList = {}
 pluginManager.keyreleasedList = {}
+pluginManager.wheelmovedList = {}
 plugin = {}
 
 function pluginManager.load()
@@ -48,6 +49,9 @@ function pluginManager.load()
             end
             if plugin.keyreleased then
                 table.insert(pluginManager.keyreleasedList, plugin)
+            end
+            if plugin.wheelmoved then
+                table.insert(pluginManager.wheelmovedList, plugin)
             end
             if plugin.update then
                 table.insert(pluginManager.updateList, plugin)
@@ -92,6 +96,12 @@ end
 function pluginManager.keyreleased( key )
     for i, plugin in pairs(pluginManager.keyreleasedList) do
         plugin.keyreleased(key)
+    end
+end
+
+function pluginManager.wheelmoved( x, y )
+    for i, plugin in pairs(pluginManager.wheelmovedList) do
+        plugin.wheelmoved( x, y )
     end
 end
 
