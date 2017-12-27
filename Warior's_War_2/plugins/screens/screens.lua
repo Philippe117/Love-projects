@@ -8,21 +8,21 @@
 
 screens = {}
 local path = "plugins/screens/"
-
-myLogo = {}
-myLogo.position = {x=0, y=0, z=0}
+map = {}
 
 function plugin.load()
-    screens.logo = love.graphics.newImage(""..path.."logo.png")
-    camera.addElement(myLogo)
+    map = mapManager.loadMap("logo")
+    camera.addElement(map)
 end
 
-function myLogo.draw(x,y,r,s)
-    love.graphics.draw( screens.logo ,x ,y , r, s, s)
+function plugin.mousepressed(mouseX, mouseY, button)
+    print("clic")
+    local wx, wy, wz = camera.screenToWorld(mouseX, mouseY, 0)
+    mapManager.removeMaterial(map, wx, wy, 15)
 end
 
 function plugin.draw()
     camera.draw()
 --    love.graphics.draw( screens.logo ,200,200)
-    love.graphics.draw( screens.logo ,100,100)
+--    love.graphics.draw( screens.logo ,100,100)
 end

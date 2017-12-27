@@ -19,13 +19,8 @@ camera.acceleration = {x=0, y=0, z=0, zoom=0}
 
 camera.elements = {}
 camera.elements.__mode = 'v'
-camera.mouseInScreen = {x, y}
-camera.mouseInWorld = {x, y, z, s, r}
 
 function plugin.update(dt)
-    camera.mouseInScreen.x, camera.mouseInScreen.y = love.mouse.getPosition()
-    camera.mouseInWorld.x, camera.mouseInWorld.y,  camera.mouseInWorld.z, camera.mouseInWorld.s = camera.screenToWorld(camera.mouseInScreen)
-
     camera.position.x = camera.position.x+camera.velocity.x
     camera.position.y = camera.position.y+camera.velocity.y
     camera.position.z = camera.position.z+camera.velocity.z
@@ -64,14 +59,13 @@ end
 
 function plugin.wheelmoved( x, y )
     if keyBinds.isKeybindDown(camera.keyBinds.ctrl) then
-        print(y)
+        local mx, my = love.mouse.getPosition()
         local Z = camera.maxVelocity.zoom^(y)
-        print(Z)
         camera.position.zoom = camera.position.zoom/Z
-        local cx = (camera.mouseInScreen.x-love.graphics.getWidth()/2)/camera.position.zoom
-        local cy = (camera.mouseInScreen.y-love.graphics.getHeight()/2)/camera.position.zoom
-        cx = -cx*(1-camera.maxVelocity.zoom^(-y)) -- TODO Fix this
-        cy = -cy*(1-camera.maxVelocity.zoom^(-y)) -- TODO Fix this
+        local cx = (mx-love.graphics.getWidth()/2)/camera.position.zoom
+        local cy = (my-love.graphics.getHeight()/2)/camera.position.zoom
+        cx = -cx*(1-camera.maxVelocity.zoom^(-y))
+        cy = -cy*(1-camera.maxVelocity.zoom^(-y))
         camera.position.x = camera.position.x+cx
         camera.position.y = camera.position.y+cy
     else
@@ -87,19 +81,20 @@ function camera.addElement(element)
     table.insert(camera.elements, element)
 end
 
-function camera.worldToScreen(position)
-    local s = math.abs(1000/(camera.position.z-position.z))*camera.position.zoom
-    local x = (position.x-camera.position.x)*s+love.graphics.getWidth()/2
-    local y = (position.y-camera.position.y)*s+love.graphics.getHeight()/2
+function camera.worldToScreen(x, y, z)
+    if not z then z = 0 end
+    local s = math.abs(1000/(camera.position.z-z))*camera.position.zoom
+    local x = (x-camera.position.x)*s+love.graphics.getWidth()/2
+    local y = (y-camera.position.y)*s+love.graphics.getHeight()/2
     local r = 0
     return x, y, r, s
 end
 
-function camera.screenToWorld(position, z)
+function camera.screenToWorld(x, y, z)
     if not z then z = 0 end
     local s = math.abs(1000/(camera.position.z-z))*camera.position.zoom
-    local x = (position.x-love.graphics.getWidth()/2)/s+camera.position.x
-    local y = (position.y-love.graphics.getHeight()/2)/s+camera.position.y
+    x = (x-love.graphics.getWidth()/2)/s+camera.position.x
+    y = (y-love.graphics.getHeight()/2)/s+camera.position.y
     local r = 0
     return x, y, z, r, 1/s
 end
@@ -107,8 +102,8 @@ end
 function camera.draw()
     for i, element in pairs(camera.elements) do
         if element.draw then
-            local x, y, r, s = camera.worldToScreen(element.position)
-            element.draw(x, y, r, s)
+            local x, y, r, s = camera.worldToScreen(element.position.x, element.position.y)
+            element:draw(x, y, r, s)
         end
     end
     love.graphics.print("position=("..camera.position.x..", "..camera.position.y..", "..camera.position.zoom..")", 400, 00)

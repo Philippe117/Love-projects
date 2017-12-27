@@ -76,7 +76,9 @@ function pluginManager.load()
 end
 
 function pluginManager.mousepressed( mouseX, mouseY, button )
+    print("mouse pressed")
     for i, plugin in pairs(pluginManager.mousepressedList) do
+        print("mouse pressed2")
         plugin.mousepressed(mouseX, mouseY, button)
     end
 end
