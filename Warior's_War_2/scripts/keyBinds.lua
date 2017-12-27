@@ -14,3 +14,11 @@ function keyBinds.checkKeybind(key, keyBind)
     end
     return false
 end
+function keyBinds.isKeybindDown(keyBind)
+    for i, bind in pairs(keyBind) do
+        if love.keyboard.isDown(bind) then
+            return true
+        end
+    end
+    return false
+end
