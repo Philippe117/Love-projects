@@ -100,6 +100,7 @@ function camera.screenToWorld(x, y, z)
 end
 
 function camera.draw()
+    table.sort (camera.elements, camera.sort)
     for i, element in pairs(camera.elements) do
         if element.draw then
             local x, y, r, s = camera.worldToScreen(element.position.x, element.position.y)
@@ -108,4 +109,8 @@ function camera.draw()
     end
     love.graphics.print("position=("..camera.position.x..", "..camera.position.y..", "..camera.position.zoom..")", 400, 00)
     love.graphics.print("velocity=("..camera.velocity.x..", "..camera.velocity.y..")", 400, 10)
+end
+
+function camera.sort(element1, element2)
+    return element1.position.z < element2.position.z
 end
