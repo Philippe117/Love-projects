@@ -103,7 +103,7 @@ function camera.draw()
     table.sort (camera.elements, camera.sort)
     for i, element in pairs(camera.elements) do
         if element.draw then
-            local x, y, r, s = camera.worldToScreen(element.position.x, element.position.y)
+            local x, y, r, s = camera.worldToScreen(element.position.x, element.position.y, element.position.z)
             element:draw(x, y, r, s)
         end
     end
