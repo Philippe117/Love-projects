@@ -18,11 +18,13 @@ end
 function plugin.mousepressed(mouseX, mouseY, button)
     print("clic")
     local wx, wy, wz = camera.screenToWorld(mouseX, mouseY, 0)
-    mapManager.removeMaterial(map, wx, wy, 15)
+    mapManager.damageMaterial(map, wx, wy, 50, 15, 0.8)
 end
 
 function plugin.draw()
     camera.draw()
---    love.graphics.draw( screens.logo ,200,200)
---    love.graphics.draw( screens.logo ,100,100)
+    local mx, my = love.mouse.getPosition()
+    local wx, wy = camera.screenToWorld(mx, my)
+    local a = map:getHardness(wx, wy)
+    love.graphics.print(""..a.."", mx, my-10)
 end

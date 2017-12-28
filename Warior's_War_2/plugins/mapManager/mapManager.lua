@@ -25,9 +25,12 @@ end
 function mapManager.loadMap(mapFileName)
     local map = {}
     map.imageData = love.image.newImageData(""..path..""..mapFileName.."/image.png")
+    map.hardnessData = love.image.newImageData(""..path..""..mapFileName.."/hardnessData.png")
     map.image = love.graphics.newImage(map.imageData)
     map.image:setFilter("nearest","nearest")
     map.draw = mapManager.draw
+    map.getColision = mapManager.getColision
+    map.getHardness = mapManager.getHardness
     map.removeMaterial = mapManager.draw
     map.position = {x=0, y=0, z=0 }
     map.status = {UTD=false, time=0 }
@@ -35,22 +38,46 @@ function mapManager.loadMap(mapFileName)
     return map
 end
 
-function mapManager.removeMaterial(map, x, y, radius, delay)
+function mapManager.damageMaterial(map, x, y, radius, damage, hardness, delay)
     if not delay then delay = refreshTime end
-    x = math.floor(x+0.5)
-    y = math.floor(y+0.5)
+    x = math.floor(x+0.5-map.position.x)
+    y = math.floor(y+0.5-map.position.y)
     if map.status.UTD then
         map.status.UTD = false
         map.status.time = time.time+delay
     end
-    local radius2 = radius^2
+--    local radius2 = radius^2
     for px=math.max(x-radius, 1), math.min(x+radius, map.imageData:getWidth()), 1 do
         for py=math.max(y-radius, 1), math.min(y+radius, map.imageData:getHeight()), 1 do
-            if (x-px)^2+(y-py)^2 < radius2 then
-                map.imageData:setPixel(px, py, 0, 0, 0, 0)
+            local dist = ((x-px)^2+(y-py)^2)^0.5
+            if dist < radius then
+                local d = damage*((radius-dist)/radius)^hardness
+                local d2 = d/5
+                local r, g, b, a = map.hardnessData:getPixel( math.floor(px), math.floor(py) )
+                map.hardnessData:setPixel(px, py, math.max(0, r-d), 0, 0, 0)
+                local nr, ng, nb, na = map.imageData:getPixel( math.floor(px), math.floor(py) )
+                nr = math.max(0, nr-d2)
+                ng = math.max(0, ng-d2)
+                nb = math.max(0, nb-d2)
+                if r-damage <= 0 then na = 0 end
+                map.imageData:setPixel(px, py, nr, ng, nb, na)
             end
         end
     end
+end
+
+function mapManager.getColision(map, x,y)
+    x = math.max(0, math.min(map.image:getWidth()-1, x-map.position.x))
+    y = math.max(0, math.min(map.image:getHeight()-1, y-map.position.y))
+    local r, g, b, a = map.imageData:getPixel( math.floor(x), math.floor(y) )
+    return a < 10, a
+end
+
+function mapManager.getHardness(map, x,y)
+    x = math.max(0, math.min(map.image:getWidth()-1, x-map.position.x))
+    y = math.max(0, math.min(map.image:getHeight()-1, y-map.position.y))
+    local r, g, b, a = map.hardnessData:getPixel( math.floor(x), math.floor(y) )
+    return r
 end
 
 function mapManager.draw(self, x, y, r, s)
