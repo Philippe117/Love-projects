@@ -31,10 +31,16 @@ function mapManager.loadMap(mapFileName)
     map.draw = mapManager.draw
     map.getColision = mapManager.getColision
     map.getHardness = mapManager.getHardness
-    map.removeMaterial = mapManager.draw
+    map.damageMaterial = mapManager.damageMaterial
     map.position = {x=0, y=0, z=0 }
     map.status = {UTD=false, time=0 }
+    map.background = {}
+    map.background.image = love.graphics.newImage(""..path..""..mapFileName.."/background.png")
+    map.background.position = {x=-650, y=-900, z=-1000 }
+    map.background.draw = mapManager.drawBackground
     table.insert(mapManager.maps, map)
+    camera.addElement(map)
+    camera.addElement(map.background)
     return map
 end
 
@@ -47,8 +53,8 @@ function mapManager.damageMaterial(map, x, y, radius, damage, hardness, delay)
         map.status.time = time.time+delay
     end
 --    local radius2 = radius^2
-    for px=math.max(x-radius, 1), math.min(x+radius, map.imageData:getWidth()), 1 do
-        for py=math.max(y-radius, 1), math.min(y+radius, map.imageData:getHeight()), 1 do
+    for px=math.max(x-radius, 0), math.min(x+radius, map.imageData:getWidth()-1), 1 do
+        for py=math.max(y-radius, 0), math.min(y+radius, map.imageData:getHeight()-1), 1 do
             local dist = ((x-px)^2+(y-py)^2)^0.5
             if dist < radius then
                 local d = damage*((radius-dist)/radius)^hardness
@@ -59,7 +65,7 @@ function mapManager.damageMaterial(map, x, y, radius, damage, hardness, delay)
                 nr = math.max(0, nr-d2)
                 ng = math.max(0, ng-d2)
                 nb = math.max(0, nb-d2)
-                if r-damage <= 0 then na = 0 end
+                if r-d <= 0 then na = 0 end
                 map.imageData:setPixel(px, py, nr, ng, nb, na)
             end
         end
@@ -82,4 +88,8 @@ end
 
 function mapManager.draw(self, x, y, r, s)
     love.graphics.draw(self.image ,x , y, r, s)
+end
+
+function mapManager.drawBackground(self, x, y, r, s)
+    love.graphics.draw(self.image ,x , y, r, s*6)
 end
