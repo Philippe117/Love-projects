@@ -12,13 +12,11 @@ map = {}
 
 function plugin.load()
     map = mapManager.loadMap("Le desert de Mirou")
-    camera.addElement(map)
 end
 
 function plugin.mousepressed(mouseX, mouseY, button)
-    print("clic")
     local wx, wy, wz = camera.screenToWorld(mouseX, mouseY, 0)
-    mapManager.damageMaterial(map, wx, wy, 50, 15, 0.8)
+    map:damageMaterial(wx, wy, 200, 120, 1)
 end
 
 function plugin.draw()
