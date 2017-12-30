@@ -19,9 +19,9 @@ pluginManager.keyreleasedList = {}
 pluginManager.wheelmovedList = {}
 plugin = {}
 
-function pluginManager.load()
-    print("getting plugins...")
-    local pluginsNames = love.filesystem.getDirectoryItems("plugins")
+function pluginManager.load(folder)
+    print("getting plugins from "..folder.."")
+    local pluginsNames = love.filesystem.getDirectoryItems(folder)
     for i, pluginName in pairs(pluginsNames) do
         print("looking for "..pluginName.."")
         local filePath = "plugins/"..pluginName.."/"..pluginName..".lua"

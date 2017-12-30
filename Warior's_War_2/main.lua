@@ -12,7 +12,7 @@ print("starting program")
 function love.load()
     print("loading...")
     love.filesystem.load("pluginManager.lua")()
-    pluginManager.load()
+    pluginManager.load("plugins")
 end
 function love.mousepressed( mouseX, mouseY, button )
     pluginManager.mousepressed( mouseX, mouseY, button )

@@ -112,5 +112,5 @@ function camera.draw()
 end
 
 function camera.sort(element1, element2)
-    return element1.position.z < element2.position.z
+    return element1 and element2 and element1.position.z < element2.position.z
 end

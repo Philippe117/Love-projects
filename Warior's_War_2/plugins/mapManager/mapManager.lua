@@ -32,7 +32,8 @@ function mapManager.loadMap(mapFileName)
     map.getColision = mapManager.getColision
     map.getHardness = mapManager.getHardness
     map.damageMaterial = mapManager.damageMaterial
-    map.position = {x=0, y=0, z=0 }
+    map.sphericalColision = mapManager.sphericalColision
+    map.position = {x=0, y=0, z=20 }
     map.status = {UTD=false, time=0 }
     map.background = {}
     map.background.image = love.graphics.newImage(""..path..""..mapFileName.."/background.png")
@@ -72,11 +73,20 @@ function mapManager.damageMaterial(map, x, y, radius, damage, hardness, delay)
     end
 end
 
+
+function mapManager.draw(self, x, y, r, s)
+    love.graphics.draw(self.image ,x , y, r, s)
+end
+
+function mapManager.drawBackground(self, x, y, r, s)
+    love.graphics.draw(self.image ,x , y, r, s*6)
+end
+
 function mapManager.getColision(map, x,y)
     x = math.max(0, math.min(map.image:getWidth()-1, x-map.position.x))
     y = math.max(0, math.min(map.image:getHeight()-1, y-map.position.y))
     local r, g, b, a = map.imageData:getPixel( math.floor(x), math.floor(y) )
-    return a < 10, a
+    return a > 240, a
 end
 
 function mapManager.getHardness(map, x,y)
@@ -86,10 +96,41 @@ function mapManager.getHardness(map, x,y)
     return r
 end
 
-function mapManager.draw(self, x, y, r, s)
-    love.graphics.draw(self.image ,x , y, r, s)
-end
+function mapManager.sphericalColision(map, x, y, radius, precision)
+    local contacts = {}
+    local numberOfContacts = 0
+    local step = 2*math.pi/precision
+    for angle=0, 2*math.pi, step do
+        local dx = math.cos(angle)*radius
+        local dy = math.sin(angle)*radius
+        local cx = x+dx
+        local cy = y+dy
+        if map:getColision(cx, cy) then
+            table.insert(contacts, {x=dx, y=dy})
+            numberOfContacts = numberOfContacts+1
+--            for angle2=angle-step, angle+step, 2*step/precision do
+--                local dx = math.cos(angle2)*radius
+--                local dy = math.sin(angle2)*radius
+--                local cx = x+dx
+--                local cy = y+dy
+--                if map:getColision(cx, cy) then
+--                    table.insert(contacts, {x=dx, y=dy})
+--                    numberOfContacts = numberOfContacts+1
+--                end
+--            end
+        end
+    end
 
-function mapManager.drawBackground(self, x, y, r, s)
-    love.graphics.draw(self.image ,x , y, r, s*6)
+    if numberOfContacts == 0 then return -10 end
+    local resultx = 0
+    local resulty = 0
+--    print(resultx)
+    for i, contact in pairs(contacts) do
+        resultx = resultx+contact.x
+        resulty = resulty+contact.y
+    end
+    local resultAngle = math.atan2(resulty, resultx)
+    print(resultAngle)
+    print(numberOfContacts)
+    return resultAngle
 end
