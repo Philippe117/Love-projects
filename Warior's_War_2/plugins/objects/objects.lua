@@ -9,9 +9,10 @@
 object = {}
 objectManager = {}
 objectManager.objects = {}
+objectManager.checkStatusList = {}
 objectManager.loadList = {}
 objectManager.updateList = {}
-objectManager.slowUpdatePointer = 1
+objectManager.slowUpdatePointer = nil
 objectManager.slowUpdateList = {}
 setmetatable(objectManager.loadList, { __mode = 'vk' })
 setmetatable(objectManager.updateList, { __mode = 'vk' })
@@ -49,25 +50,37 @@ function objectManager.subscribeObject(object)
     if object.update then table.insert(objectManager.updateList, object) end
     if object.slowUpdate then table.insert(objectManager.slowUpdateList, object) end
     object.lastUpdate = time.time
+    table.insert(objectManager.checkStatusList, object)
 end
 
 function plugin.update(dt)
-    slowUpdate()
+    objectManager.slowUpdate()
+    objectManager.checkStatus()
     for i, object in pairs(objectManager.updateList) do
         object:update(dt)
     end
 end
 
-function slowUpdate()
-    objectManager.slowUpdatePointer = objectManager.slowUpdatePointer+1
-    local object = objectManager.slowUpdateList[objectManager.slowUpdatePointer]
-    if not object then
-        objectManager.slowUpdatePointer = 1
-        object = objectManager.slowUpdateList[objectManager.slowUpdatePointer]
-    end
+function objectManager.slowUpdate()
+    objectManager.slowUpdatePointer, object = next(objectManager.slowUpdateList, objectManager.slowUpdatePointer)
     if object then
         local dt = time.time-object.lastUpdate
         object.lastUpdate = time.time
         object:slowUpdate(dt)
     end
+end
+
+function objectManager.checkStatus()
+    for i, object in pairs(objectManager.checkStatusList) do
+        if object.status == "dead" then
+            table.remove(objectManager.checkStatusList, i)
+        end
+    end
+end
+
+function plugin.draw()
+    if objectManager.slowUpdatePointer then
+        love.graphics.print(objectManager.slowUpdatePointer, 10, 100)
+    end
+
 end
