@@ -10,7 +10,9 @@ screens = {}
 local path = "plugins/screens/"
 map = {}
 myRocks = {}
+setmetatable(myRocks, { __mode = 'vk' })
 myOtherRocks = {}
+setmetatable(myOtherRocks, { __mode = 'vk' })
 function plugin.load()
     map = mapManager.loadMap("Le desert de Mirou")
 end
