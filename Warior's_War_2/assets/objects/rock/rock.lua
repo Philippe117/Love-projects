@@ -43,7 +43,7 @@ function rock.update(self, dt)
         self.position.x = self.position.x-math.cos(angle)*0.1
         self.position.y = self.position.y-math.sin(angle)*0.1
         self.velocity.x, self.velocity.y = customPhysic.rebound(self.velocity.x, self.velocity.y, angle, 0, 0)
-        map:damageMaterial(self.position.x, self.position.y, 30, 10, 0.5)
+--        map:damageMaterial(self.position.x, self.position.y, 30, 10, 0.5)
     end
 end
 
@@ -52,17 +52,20 @@ function rock.slowUpdate(self, dt)
         self.target = nil
         local targetDistance = self.range^2
         for i, foe in pairs(self.foes) do
-            local distance = (
-                    (self.position.x-foe.position.x)^2+
-                    (self.position.y-foe.position.y)^2+
-                    (self.position.z-foe.position.z)^2)
-            local x, y, sight = self.map:raycastCollision(
-                self.position.x, self.position.y, foe.position.x, foe.position.y, 2)
-            if distance < targetDistance and sight then
-                targetDistance = distance
-                self.target = foe
-                self.cursor.position.x = self.target.position.x
-                self.cursor.position.y = self.target.position.y
+            local dx = self.position.x-foe.position.x
+            local dy = self.position.y-foe.position.y
+            if math.abs(dx) < self.range and math.abs(dy) < self.range then
+                local distance = ( (dx)^2+ (dy)^2)
+                if distance < targetDistance then
+                    local x, y, sight = self.map:raycastCollision(
+                        self.position.x, self.position.y, foe.position.x, foe.position.y, 4)
+                    if sight then
+                        targetDistance = distance
+                        self.target = foe
+                        self.cursor.position.x = self.target.position.x
+                        self.cursor.position.y = self.target.position.y
+                    end
+                end
             end
         end
     end
