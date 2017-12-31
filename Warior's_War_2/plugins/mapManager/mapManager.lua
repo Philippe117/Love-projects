@@ -137,7 +137,6 @@ function mapManager.raycastCollision(map, ox, oy, dx, dy, step)
     --    dx, dy = the world coordinates of the destination
     --    step = distance between samples
     --    return the position of contact on x, y and whether or not the destination is reached
-
     local distance = ((ox-dx)^2+(oy-dy)^2)^0.5
     if distance ~= 0 then
         local vx, vy = (dx-ox)/distance, (dy-oy)/distance
@@ -145,11 +144,9 @@ function mapManager.raycastCollision(map, ox, oy, dx, dy, step)
 --            print("step")
             local cx, cy = ox+vx*d, oy+vy*d
             if map:getCollision(cx, cy) then
-                print("unreached")
                 return cx, cy, false
             end
         end
-        print("reached")
         return dx, dy, true
     end
     print("raycast error")
