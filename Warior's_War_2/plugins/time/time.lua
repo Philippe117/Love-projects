@@ -13,7 +13,7 @@ time.desiredRate = 1/60
 
 function plugin.update(dt)
     time.time = time.time + time.desiredRate
-    time.simspeed = dt/time.desiredRate
+    time.simspeed = time.desiredRate/dt
 end
 
 function plugin.draw()
