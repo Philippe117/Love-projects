@@ -21,6 +21,7 @@ camera.elements = {}
 setmetatable(camera.elements, { __mode = 'vk' })
 
 function plugin.update(dt)
+    camera.sortElements()
     camera.position.x = camera.position.x+camera.velocity.x
     camera.position.y = camera.position.y+camera.velocity.y
     camera.position.z = camera.position.z+camera.velocity.z
@@ -75,6 +76,7 @@ function plugin.wheelmoved( x, y )
 end
 
 function camera.addElement(element)
+------------------------------------------------------
 --    An element must contain the following attributes
 --    - a draw function(x,y,r,s)
 --    - a position attribute {x, y, z}
@@ -100,17 +102,23 @@ function camera.screenToWorld(x, y, z)
 end
 
 function camera.draw()
-    table.sort (camera.elements, camera.sort)
     for i, element in pairs(camera.elements) do
+--        print(element)
         if element.draw then
             local x, y, r, s = camera.worldToScreen(element.position.x, element.position.y, element.position.z)
             element:draw(x, y, r, s)
+        else
+            print("no draw")
         end
     end
     love.graphics.print("position=("..camera.position.x..", "..camera.position.y..", "..camera.position.zoom..")", 400, 00)
     love.graphics.print("velocity=("..camera.velocity.x..", "..camera.velocity.y..")", 400, 10)
 end
 
-function camera.sort(element1, element2)
-    return element1 and element2 and element1.position.z < element2.position.z
+function camera.sortElements()
+    for i, element in pairs(camera.elements) do
+        if camera.elements[i+1] and camera.elements[i].position.z > camera.elements[i+1].position.z then
+            camera.elements[i], camera.elements[i+1] = camera.elements[i+1], camera.elements[i]
+        end
+    end
 end
