@@ -83,18 +83,18 @@ function mapManager.drawBackground(self, x, y, r, s)
     love.graphics.draw(self.image ,x , y, r, s*6)
 end
 
-function mapManager.getCollision(map, x,y)
-    x = math.max(0, math.min(map.image:getWidth()-1, x-map.position.x))
-    y = math.max(0, math.min(map.image:getHeight()-1, y-map.position.y))
-    local r, g, b, a = map.imageData:getPixel( math.floor(x), math.floor(y) )
-    return a > colisionThreashold, a
-end
-
 function mapManager.getHardness(map, x,y)
     x = math.max(0, math.min(map.image:getWidth()-1, x-map.position.x))
     y = math.max(0, math.min(map.image:getHeight()-1, y-map.position.y))
     local r, g, b, a = map.hardnessData:getPixel( math.floor(x), math.floor(y) )
     return r
+end
+
+function mapManager.getCollision(map, x,y)
+    x = math.max(0, math.min(map.image:getWidth()-1, x-map.position.x))
+    y = math.max(0, math.min(map.image:getHeight()-1, y-map.position.y))
+    local r, g, b, a = map.imageData:getPixel( math.floor(x), math.floor(y) )
+    return a > colisionThreashold, a
 end
 
 function mapManager.sphericalCollision(map, x, y, radius, precision)
