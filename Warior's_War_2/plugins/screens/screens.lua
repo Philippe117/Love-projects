@@ -9,15 +9,24 @@
 screens = {}
 local path = "plugins/screens/"
 map = {}
-myRock = {}
+myRocks = {}
+myOtherRocks = {}
 function plugin.load()
     map = mapManager.loadMap("Le desert de Mirou")
 end
 
 function plugin.mousepressed(mouseX, mouseY, button)
     local wx, wy, wz = camera.screenToWorld(mouseX, mouseY, 0)
---    map:damageMaterial(wx, wy, 50, 320, 3)
-    myRock = rocks.create(wx, wy, wz)
+    if button == 1 then
+        print("new good")
+        table.insert(myRocks, rock.create(wx, wy, wz, map, myOtherRocks))
+    elseif button == 2 then
+        print("new bad")
+        table.insert(myOtherRocks, rock.create(wx, wy, wz, map, myRocks))
+    elseif button == 3 then
+        print("new ugly")
+        map:damageMaterial(wx, wy, 50, 320, 3)
+    end
 end
 
 function plugin.draw()
