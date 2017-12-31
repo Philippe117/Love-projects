@@ -6,33 +6,20 @@
 -- To change this template use File | Settings | File Templates.
 --
 
-local refreshTime = 0.1
+local refreshTime = 0.15
+local colisionThreashold = 250
 local path = "assets/maps/"
 mapManager = {}
 mapManager.maps = {}
 setmetatable(mapManager.maps, { __mode = 'vk' })
-
-function plugin.update()
-    for i, map in pairs(mapManager.maps) do
-        if  not map.status.UTD
-        and map.status.time < time.time then
-            map.image = love.graphics.newImage(map.imageData)
-            map.status.UTD = true
-        end
-    end
-end
+mapManager.__index = mapManager
 
 function mapManager.loadMap(mapFileName)
-    local map = {}
+    local map = setmetatable({}, mapManager)
     map.imageData = love.image.newImageData(""..path..""..mapFileName.."/image.png")
     map.hardnessData = love.image.newImageData(""..path..""..mapFileName.."/hardnessData.png")
     map.image = love.graphics.newImage(map.imageData)
     map.image:setFilter("nearest","nearest")
-    map.draw = mapManager.draw
-    map.getColision = mapManager.getColision
-    map.getHardness = mapManager.getHardness
-    map.damageMaterial = mapManager.damageMaterial
-    map.sphericalColision = mapManager.sphericalColision
     map.position = {x=0, y=0, z=20 }
     map.status = {UTD=false, time=0 }
     map.background = {}
@@ -45,7 +32,18 @@ function mapManager.loadMap(mapFileName)
     return map
 end
 
+function plugin.update()
+    for i, map in pairs(mapManager.maps) do
+        if  not map.status.UTD
+        and map.status.time < time.time then
+            map.image = love.graphics.newImage(map.imageData)
+            map.status.UTD = true
+        end
+    end
+end
+
 function mapManager.damageMaterial(map, x, y, radius, damage, hardness, delay)
+    local damageDealt = 0
     if not delay then delay = refreshTime end
     x = math.floor(x+0.5-map.position.x)
     y = math.floor(y+0.5-map.position.y)
@@ -66,27 +64,30 @@ function mapManager.damageMaterial(map, x, y, radius, damage, hardness, delay)
                 nr = math.max(0, nr-d2)
                 ng = math.max(0, ng-d2)
                 nb = math.max(0, nb-d2)
-                if r-d <= 0 then na = 0 end
+                if na ~= 0 and r-d <= 0 then
+                    na = 0
+                    damageDealt = damageDealt+d
+                end
                 map.imageData:setPixel(px, py, nr, ng, nb, na)
             end
         end
     end
+    return damageDealt
 end
 
-
-function mapManager.draw(self, x, y, r, s)
-    love.graphics.draw(self.image ,x , y, r, s)
+function mapManager.draw(map, x, y, r, s)
+    love.graphics.draw(map.image ,x , y, r, s)
 end
 
 function mapManager.drawBackground(self, x, y, r, s)
     love.graphics.draw(self.image ,x , y, r, s*6)
 end
 
-function mapManager.getColision(map, x,y)
+function mapManager.getCollision(map, x,y)
     x = math.max(0, math.min(map.image:getWidth()-1, x-map.position.x))
     y = math.max(0, math.min(map.image:getHeight()-1, y-map.position.y))
     local r, g, b, a = map.imageData:getPixel( math.floor(x), math.floor(y) )
-    return a > 240, a
+    return a > colisionThreashold, a
 end
 
 function mapManager.getHardness(map, x,y)
@@ -96,7 +97,14 @@ function mapManager.getHardness(map, x,y)
     return r
 end
 
-function mapManager.sphericalColision(map, x, y, radius, precision)
+function mapManager.sphericalCollision(map, x, y, radius, precision)
+--    Detect collision of a spherical shape with a map.
+--    map = the map
+--    x, y = the world coordinates of the center of the sphere
+--    radius = radius of the sphere
+--    precision = number of samples
+--    return the angle of collision or -10 if no collision
+
     local contacts = {}
     local numberOfContacts = 0
     local step = 2*math.pi/precision
@@ -105,32 +113,45 @@ function mapManager.sphericalColision(map, x, y, radius, precision)
         local dy = math.sin(angle)*radius
         local cx = x+dx
         local cy = y+dy
-        if map:getColision(cx, cy) then
+        if map:getCollision(cx, cy) then
             table.insert(contacts, {x=dx, y=dy})
             numberOfContacts = numberOfContacts+1
---            for angle2=angle-step, angle+step, 2*step/precision do
---                local dx = math.cos(angle2)*radius
---                local dy = math.sin(angle2)*radius
---                local cx = x+dx
---                local cy = y+dy
---                if map:getColision(cx, cy) then
---                    table.insert(contacts, {x=dx, y=dy})
---                    numberOfContacts = numberOfContacts+1
---                end
---            end
         end
     end
 
     if numberOfContacts == 0 then return -10 end
     local resultx = 0
     local resulty = 0
---    print(resultx)
     for i, contact in pairs(contacts) do
         resultx = resultx+contact.x
         resulty = resulty+contact.y
     end
     local resultAngle = math.atan2(resulty, resultx)
-    print(resultAngle)
-    print(numberOfContacts)
     return resultAngle
+end
+
+function mapManager.raycastCollision(map, ox, oy, dx, dy, step)
+    --    Detect collision of a line with a map.
+    --    map = the map
+    --    ox, oy = the world coordinates of the origin
+    --    dx, dy = the world coordinates of the destination
+    --    step = distance between samples
+    --    return the position of contact on x, y and whether or not the destination is reached
+
+    local distance = ((ox-dx)^2+(oy-dy)^2)^0.5
+    if distance ~= 0 then
+        local vx, vy = (dx-ox)/distance, (dy-oy)/distance
+        for d=0, distance, step do
+--            print("step")
+            local cx, cy = ox+vx*d, oy+vy*d
+            if map:getCollision(cx, cy) then
+                print("unreached")
+                return cx, cy, false
+            end
+        end
+        print("reached")
+        return dx, dy, true
+    end
+    print("raycast error")
+    return ox, oy, false
 end
