@@ -11,7 +11,7 @@ objectManager = {}
 objectManager.objects = {}
 objectManager.loadList = {}
 objectManager.updateList = {}
-objectManager.slowpdatePointer = 1
+objectManager.slowUpdatePointer = 1
 objectManager.slowUpdateList = {}
 setmetatable(objectManager.loadList, { __mode = 'vk' })
 setmetatable(objectManager.updateList, { __mode = 'vk' })
@@ -59,10 +59,10 @@ function plugin.update(dt)
 end
 
 function slowUpdate()
-    objectManager.slowpdatePointer = objectManager.slowpdatePointer+1
+    objectManager.slowUpdatePointer = objectManager.slowUpdatePointer+1
     local object = objectManager.slowUpdateList[objectManager.slowUpdatePointer]
     if not object then
-        objectManager.slowpdatePointer = 1
+        objectManager.slowUpdatePointer = 1
         object = objectManager.slowUpdateList[objectManager.slowUpdatePointer]
     end
     if object then
