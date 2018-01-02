@@ -12,7 +12,7 @@ smallRock.__index = smallRock
 local path = "assets/objects/smallRock/"
 
 function object.load()
-    smallRock.image = love.graphics.newImage(""..path.."bule.png")
+    smallRock.image = love.graphics.newImage(""..path.."trace.png")
 end
 
 function smallRock.create(x, y, z, map, foes)
@@ -40,13 +40,29 @@ function smallRock.update(self, dt)
             self.position.x = cx
             self.position.y = cy
             self.status = "dead"
-            map:damageMaterial(self.position.x, self.position.y, 10, 5, 0.8)
+        end
+        if self.foes then
+            for i, foe in pairs(self.foes) do
+                local dx = foe.position.x-self.position.x
+                local dy = foe.position.y-self.position.y
+                local distance = ((dx)^2+ (dy)^2)
+                if distance < 200 then
+                    foe.status = "dead"
+                    self.status = "dead"
+                    break
+                end
+            end
         end
     else
         self.status = "dead"
     end
 end
 
+function smallRock.destroy(self)
+--    map:damageMaterial(self.position.x, self.position.y, 20, 20, 2)
+end
+
 function smallRock.draw(self, x, y, r, s)
-    love.graphics.draw(self.image ,x , y, r, s*0.3, s*0.3, self.image:getHeight()/2, self.image:getWidth()/2)
+    local A = math.atan2(self.velocity.y, self.velocity.x)
+    love.graphics.draw(self.image ,x , y, r+A, s*1, s*1, self.image:getWidth(), self.image:getHeight()/2)
 end
