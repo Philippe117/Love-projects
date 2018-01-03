@@ -10,13 +10,10 @@ object = {}
 objectManager = {}
 objectManager.objects = {}
 objectManager.checkStatusList = {}
-objectManager.loadList = {}
-objectManager.updateList = {}
+objectManager.loadList = setmetatable({}, { __mode = 'vk' })
+objectManager.updateList = setmetatable({}, { __mode = 'vk' })
 objectManager.slowUpdatePointer = nil
-objectManager.slowUpdateList = {}
-setmetatable(objectManager.loadList, { __mode = 'vk' })
-setmetatable(objectManager.updateList, { __mode = 'vk' })
-setmetatable(objectManager.slowUpdateList, { __mode = 'vk' })
+objectManager.slowUpdateList = setmetatable({}, { __mode = 'vk' })
 local path = "assets/objects/"
 
 function plugin.load()
@@ -57,7 +54,11 @@ function plugin.update(dt)
     objectManager.slowUpdate()
     objectManager.checkStatus()
     for i, object in pairs(objectManager.updateList) do
-        object:update(dt)
+        if object.update then
+            object:update(dt)
+        else
+            print("bad link")
+        end
     end
 end
 
@@ -73,6 +74,7 @@ end
 function objectManager.checkStatus()
     for i, object in pairs(objectManager.checkStatusList) do
         if object.status == "dead" then
+            if object.destroy then object.destroy(object) end
             table.remove(objectManager.checkStatusList, i)
         end
     end
