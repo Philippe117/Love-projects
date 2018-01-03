@@ -103,7 +103,7 @@ function mapManager.sphericalCollision(map, x, y, radius, precision)
 --    x, y = the world coordinates of the center of the sphere
 --    radius = radius of the sphere
 --    precision = number of samples
---    return the angle of collision or -10 if no collision
+--    return contact and angle of collision or -10 if no collision
 
     local contacts = {}
     local numberOfContacts = 0
@@ -119,7 +119,7 @@ function mapManager.sphericalCollision(map, x, y, radius, precision)
         end
     end
 
-    if numberOfContacts == 0 then return -10 end
+    if numberOfContacts == 0 then return 0, false end
     local resultx = 0
     local resulty = 0
     for i, contact in pairs(contacts) do
@@ -127,7 +127,7 @@ function mapManager.sphericalCollision(map, x, y, radius, precision)
         resulty = resulty+contact.y
     end
     local resultAngle = math.atan2(resulty, resultx)
-    return resultAngle
+    return resultAngle, true
 end
 
 function mapManager.raycastCollision(map, ox, oy, dx, dy, step)
