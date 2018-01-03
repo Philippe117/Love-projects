@@ -48,7 +48,11 @@ function rock.update(self, dt)
             try = try+1
         end
         self.velocity.x, self.velocity.y = customPhysic.rebound(self.velocity.x, self.velocity.y, angle, 0.2, 0)
-        self.velocity.x = self.velocity.x+(self.movement-self.velocity.x)*0.9
+        if not self.target[1] then
+            self.velocity.x = self.velocity.x+(self.movement-self.velocity.x)*0.9
+        else
+            self.velocity.x = self.velocity.x+(0-self.velocity.x)*0.9
+        end
 --        map:damageMaterial(self.position.x, self.position.y, 30, 10, 0.5)
     end
     if self.target[1] and self.cooldown < time.time then
