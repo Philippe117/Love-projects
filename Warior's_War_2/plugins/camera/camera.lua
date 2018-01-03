@@ -17,8 +17,7 @@ camera.position = {x=0, y=0, z=1000, zoom=1}
 camera.velocity = {x=0, y=0, z=0, zoom=0}
 camera.acceleration = {x=0, y=0, z=0, zoom=0}
 
-camera.elements = {}
-setmetatable(camera.elements, { __mode = 'vk' })
+camera.elements = setmetatable({}, { __mode = 'vk' })
 
 function plugin.update(dt)
     camera.sortElements()
@@ -117,8 +116,9 @@ end
 
 function camera.sortElements()
     for i, element in pairs(camera.elements) do
-        if camera.elements[i+1] and camera.elements[i].position.z > camera.elements[i+1].position.z then
-            camera.elements[i], camera.elements[i+1] = camera.elements[i+1], camera.elements[i]
+        local n, ne = next(camera.elements, i)
+        if camera.elements[n] and element.position.z > ne.position.z then
+            camera.elements[i], camera.elements[n] = ne, element
         end
     end
 end
