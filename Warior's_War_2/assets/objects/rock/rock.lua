@@ -11,6 +11,8 @@ rock.__index = rock
 local path = "assets/objects/rock/"
 rock.range = 500
 rock.cooldown = 1
+rock.projectionSpeed = 2000
+rock.projectionImprecision = 0.1
 
 function object.load()
     rock.image = love.graphics.newImage(""..path.."bule.png")
@@ -71,10 +73,10 @@ function rock.update(self, dt)
             projectile.velocity.x,
             projectile.velocity.y,
             projectile.velocity.z = aiTools.calculateFireSolution(
-                    self, self.target[1], {x=0, y=9.81*physicConstants.pixelPerMeter, z=0}, distance/8000*physicConstants.pixelPerMeter)
-            projectile.velocity.x = projectile.velocity.x*(1+(math.random()-.5)*0.5)
-            projectile.velocity.y = projectile.velocity.y*(1+(math.random()-.5)*0.5)
-            projectile.velocity.z = projectile.velocity.z*(1+(math.random()-.5)*0.5)
+                    self, self.target[1], {x=0, y=9.81*physicConstants.pixelPerMeter, z=0}, distance/self.projectionSpeed*physicConstants.pixelPerMeter)
+            projectile.velocity.x = projectile.velocity.x*(1+(math.random()-.5)*self.projectionImprecision)
+            projectile.velocity.y = projectile.velocity.y*(1+(math.random()-.5)*self.projectionImprecision)
+            projectile.velocity.z = projectile.velocity.z*(1+(math.random()-.5)*self.projectionImprecision)
         else
             self.target[1] = nil
         end
