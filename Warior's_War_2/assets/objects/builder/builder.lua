@@ -6,23 +6,24 @@
 -- To change this template use File | Settings | File Templates.
 --
 
-bigRock = {}
-bigRock.__index = bigRock
-local path = "assets/objects/bigRock/"
-bigRock.range = 500
-bigRock.cooldown = 1
+builder = {}
+builder.__index = builder
+local path = "assets/objects/builder/"
+builder.cooldown = 1
 
 function object.load()
-    bigRock.image = love.graphics.newImage(""..path.."shine.png")
+    builder.image = love.graphics.newImage(""..path.."bule.png")
 end
 
-function bigRock.create(x, y, z, map, movement)
-    local self = setmetatable({}, bigRock)
+function builder.create(x, y, z, map, team, foes, movement)
+    local self = setmetatable({}, builder)
     self.position = {x=x, y=y, z=z }
     self.velocity = {x=0, y=0, z=0 }
     self.movement = movement
+    self.foes = foes
+    self.team = team
     self.map = map
-    self.cooldown = time.time+bigRock.cooldown
+    self.cooldown = time.time+builder.cooldown
     self.target = {}
     setmetatable(self.target, { __mode = 'kv' })
 
@@ -31,7 +32,7 @@ function bigRock.create(x, y, z, map, movement)
     return self
 end
 
-function bigRock.update(self, dt)
+function builder.update(self, dt)
     self.velocity.y = self.velocity.y + 9.81*time.desiredRate*physicConstants.pixelPerMeter
     self.position.x = self.position.x+self.velocity.x*time.desiredRate
     self.position.y = self.position.y+self.velocity.y*time.desiredRate
@@ -46,7 +47,7 @@ function bigRock.update(self, dt)
             angle, contact = self.map:sphericalCollision(self.position.x, self.position.y, 10, 15)
             try = try+1
         end
-        self.velocity.x, self.velocity.y = customPhysic.rebound(self.velocity.x, self.velocity.y, angle, 1, 0)
+        self.velocity.x, self.velocity.y = customPhysic.rebound(self.velocity.x, self.velocity.y, angle, 0.2, 0)
 --        self.velocity.x = self.velocity.x+(self.movement-self.velocity.x)*0.9
 --        map:damageMaterial(self.position.x, self.position.y, 30, 10, 0.5)
     end
@@ -54,18 +55,18 @@ function bigRock.update(self, dt)
         local new = rock.create(self.position.x, self.position.y, self.position.z, self.map, self.foes)
         new.movement = self.movement
         self.cooldown = time.time+rock.cooldown
-        self.team:addMember(new)
+        table.insert(self.team, new)
     end
     if self.position.y > 1000 then
         self.status = "dead"
     end
 end
 
-function bigRock.destroy(self)
+function builder.destroy(self)
     print("ded")
 end
 
-function bigRock.draw(self, x, y, r, s)
+function builder.draw(self, x, y, r, s)
 --    if self.status ~= "dead" then
         love.graphics.draw(self.image ,x , y, r, s*0.5, s*0.5, self.image:getHeight()/2, self.image:getWidth()/2)
 --    end

@@ -46,6 +46,7 @@ end
 function objectManager.subscribeObject(object)
     if object.update then table.insert(objectManager.updateList, object) end
     if object.slowUpdate then table.insert(objectManager.slowUpdateList, object) end
+    if not object.status then object.status = "living" end
     object.lastUpdate = time.time
     table.insert(objectManager.checkStatusList, object)
 end

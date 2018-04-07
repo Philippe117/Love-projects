@@ -1,6 +1,6 @@
 function love.load()
 	menulist = {}
-	love.window.setFullscreen(true)
+	love.window.setFullscreen(false)
 	
 	local list = love.filesystem.getDirectoryItems("Menu")
 	for i,h in ipairs(list) do

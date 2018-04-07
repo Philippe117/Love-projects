@@ -30,8 +30,8 @@ function love.wheelmoved( x, y )
     pluginManager.wheelmoved(x, y)
 end
 function love.update(dt)
-    collectgarbage()
     pluginManager.update(dt)
+    collectgarbage()
 end
 function love.draw()
     pluginManager.draw()

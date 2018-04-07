@@ -59,10 +59,10 @@ function smallRock.update(self, dt)
 end
 
 function smallRock.destroy(self)
---    map:damageMaterial(self.position.x, self.position.y, 20, 20, 2)
+    map:damageMaterial(self.position.x, self.position.y, 20, 20, 2)
 end
 
 function smallRock.draw(self, x, y, r, s)
     local A = math.atan2(self.velocity.y, self.velocity.x)
-    love.graphics.draw(self.image ,x , y, r+A, s*1, s*1, self.image:getWidth(), self.image:getHeight()/2)
+    love.graphics.draw(self.image ,x , y, r+A, s*0.5, s*1, self.image:getWidth(), self.image:getHeight()/2)
 end

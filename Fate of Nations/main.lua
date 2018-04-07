@@ -1,5 +1,5 @@
 function love.load()
-	love.window.setFullscreen( true )
+	--love.window.setFullscreen( false )
 	rien = love.graphics.newImage("rien.gif")
 	scripte = {}
 	local list = love.filesystem.getDirectoryItems("scripte")
